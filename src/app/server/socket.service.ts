@@ -12,7 +12,7 @@ export class SocketService {
   }
 
   private initSocket(): void {
-    this.socket = io('https://pixlecity.com/api/');
+    this.socket = io('/api/');
   }
 
   emitInit(x: number, y: number): void {
