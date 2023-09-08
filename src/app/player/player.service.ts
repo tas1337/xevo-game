@@ -38,7 +38,7 @@ export class PlayerService {
   }
 
   private initSocket(): void {
-    this.socket = io('http://localhost:3000');
+    this.socket = io('https://pixlecity.com/api/');
     this.socket.on('connect', () => {
       this.id = this.socket.id;
       this.socket.emit('init', {
