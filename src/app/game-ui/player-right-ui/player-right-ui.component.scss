@@ -1,0 +1,18 @@
+:host{
+  background-color: green;
+  width: 40%;
+  height: 20%;
+  display: flex;
+}
+.player-right-ui{
+  display: flex;
+}
+.abilities{
+  display: flex;
+  flex-wrap: wrap;
+  .ability{
+    width: 50px;
+    height: 50px;
+    border: 1px solid black;
+  }
+}
