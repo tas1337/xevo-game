@@ -12,7 +12,7 @@ export class SocketService {
   }
 
   private initSocket(): void {
-    this.socket = io('/api/');
+    this.socket = io('/');
   }
 
   emitInit(x: number, y: number): void {
@@ -33,6 +33,6 @@ export class SocketService {
 
   onUpdatePositions(callback: (playerPositions: { [id: string]: { x: number, y: number } }) => void): void {
     this.socket.on('updatePositions', callback);
-    
+    console.log('updatePositions')
   }
 }

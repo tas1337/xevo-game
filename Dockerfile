@@ -10,7 +10,7 @@ RUN npm run build --prod
 # Step 2: Serve the Angular app using Nginx
 FROM nginx:alpine
 # Copy Angular build artifacts from build stage
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/dist/xevo/. /usr/share/nginx/html/.
 # Copy custom Nginx configuration
 COPY custom_nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80

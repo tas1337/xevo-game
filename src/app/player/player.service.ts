@@ -38,9 +38,10 @@ export class PlayerService {
   }
 
   private initSocket(): void {
-    this.socket = io('/api/');
+    this.socket = io('/');
     this.socket.on('connect', () => {
       this.id = this.socket.id;
+      console.log('connected', this.socket.id)
       this.socket.emit('init', {
         id: this.socket.id,
         x: this.mySquare.position.x,
