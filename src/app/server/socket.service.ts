@@ -12,7 +12,7 @@ export class SocketService {
   }
 
   private initSocket(): void {
-    this.socket = io('/');
+    this.socket = io('http://localhost:3000/');
   }
 
   emitInit(x: number, y: number): void {
