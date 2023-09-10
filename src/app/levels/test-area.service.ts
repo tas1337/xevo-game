@@ -6,45 +6,64 @@ import * as THREE from 'three';
 })
 export class TestAreaService {
 
-  // Initialize the level
   initLevel(scene: THREE.Scene): void {
-    // Add the plane
-    // this.addPlane(scene);
-
-    // Add stars/planets
-    this.addStarsOrPlanets(scene);
+    this.addPlanet(scene);
   }
 
-  private addPlane(scene: THREE.Scene): void {
-    const geometry = new THREE.PlaneGeometry(100, 100, 1, 1);
-    const material = new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.DoubleSide });
-    const plane = new THREE.Mesh(geometry, material);
-    plane.rotation.x = Math.PI / 2;
-    scene.add(plane);
-  }
+  private addPlanet(scene: THREE.Scene): void {
+    // Create a large sphere geometry as the planet
+    const planetGeometry = new THREE.SphereGeometry(25, 32, 32); 
 
-  private addStarsOrPlanets(scene: THREE.Scene): void {
-    // Number of stars/planets you want to add
-    const numberOfStars = 50;
+    // Load texture
+    const textureLoader = new THREE.TextureLoader();
+    const planetTexture = textureLoader.load('assets/test/earth.jpg');
 
-    for (let i = 0; i < numberOfStars; i++) {
-      // Random position within the plane
-      const x = Math.random() * 100 - 50; // between -50 and 50
-      const y = Math.random() * 100 - 50; // between -50 and 50
+    // Create a MeshPhongMaterial as it supports texture maps and lighting
+    const planetMaterial = new THREE.MeshPhongMaterial({
+      map: planetTexture
+    });
 
-      // Random color
-      const color = new THREE.Color(Math.random() * 0xffffff);
+    // Create mesh and position it
+    const planet = new THREE.Mesh(planetGeometry, planetMaterial);
+    planet.position.set(-30, 0, -30);
 
-      // Create geometry and material
-      const geometry = new THREE.SphereGeometry(1, 32, 32); // radius of 1
-      const material = new THREE.MeshBasicMaterial({ color });
+    // Add to scene
+    scene.add(planet);
 
-      // Create mesh and position it
-      const star = new THREE.Mesh(geometry, material);
-      star.position.set(x, 1, y); // set to 1 unit above the plane
+    // Shader code
+    const vertexShader = `
+      varying vec3 vNormal;
+      void main() {
+        vNormal = normalize(normalMatrix * normal);
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `;
 
-      // Add to scene
-      scene.add(star);
-    }
+    const fragmentShader = `
+      uniform float c;
+      uniform float p;
+      varying vec3 vNormal;
+      void main() {
+        float intensity = pow(c - dot(vNormal, vec3(0.0, 0.0, 1.0)), p);
+        gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0) * intensity;
+      }
+    `;
+
+    // Glow effect using custom shader
+    const customMaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        "c": { value: 0.1 },
+        "p": { value: 1.4 }
+      },
+      vertexShader,
+      fragmentShader,
+      side: THREE.BackSide,
+      blending: THREE.AdditiveBlending,
+      transparent: true
+    });
+
+    const glowMesh = new THREE.Mesh(planetGeometry.clone(), customMaterial);
+    glowMesh.scale.multiplyScalar(1.3);
+    scene.add(glowMesh);
   }
 }

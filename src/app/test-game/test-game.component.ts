@@ -75,7 +75,7 @@ private initDevelopmentFeatures(): void {
         }
   
         const position = playerPositions[id];
-        id === this.playerService.id ? this.playerService.setPosition(mesh, position.x, position.y) : this.otherPlayerService.setPosition(id, position.x, position.y);
+        id === this.playerService.id ? this.playerService.setPosition(mesh, position.x, position.z) : this.otherPlayerService.setPosition(id, position.x, position.z);
       });
   
       if (this.playerService.id !== null) {
@@ -93,7 +93,7 @@ private initDevelopmentFeatures(): void {
         this.otherPlayerService.updatePosition(this.players[id], id);
       }
     });
-    
+
     this.renderer.render(this.scene, this.playerService.getCamera());
   };
 

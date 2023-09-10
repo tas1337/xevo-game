@@ -19,7 +19,7 @@ export class MinimapService {
     document.body.appendChild(this.minimapElement);
   }
 
-  updatePositions(playerPositions: { [id: string]: { x: number, y: number } }, myId: string) {
+  updatePositions(playerPositions: { [id: string]: { x: number, z: number } }, myId: string) {
     // Remove old player elements
     for (const id in this.playerElements) {
       if (!playerPositions[id]) {
@@ -46,7 +46,7 @@ export class MinimapService {
 
       const position = playerPositions[id];
       const relativeX = position.x - myPosition.x;  // relative to your position
-      const relativeY = position.y - myPosition.y;  // relative to your position
+      const relativeY = position.z - myPosition.z;  // relative to your position
 
       element.style.left = `${50 + relativeX * 5}px`;
       element.style.top = `${50 - relativeY * 5}px`;

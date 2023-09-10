@@ -5,30 +5,43 @@ import * as THREE from 'three';
   providedIn: 'root',
 })
 export class CameraService {
-  private camera!: THREE.PerspectiveCamera;
-  private cameraTargetPosition = { x: 0, y: 0, z: 5 };
-  private cameraLerpAmount = 0.005;
+  private camera: THREE.PerspectiveCamera;
+  private currentPosition = new THREE.Vector3();
+  private currentLookAt = new THREE.Vector3();
+  private cameraHolder: THREE.Object3D;
 
   constructor() {
-    this.initCamera();
-  }
-
-  private initCamera(): void {
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    this.camera.position.x = 0;
-    this.camera.position.y = 0;
-    this.camera.position.z = 0;
-
-    this.camera.rotation.x = 0;
-    this.camera.rotation.y = 0;
-    this.camera.rotation.z = 0;
+    this.cameraHolder = new THREE.Object3D();
+    this.cameraHolder.add(this.camera);
   }
 
-  updateCamera(target: { x: number, y: number }): void {
-    // Linear interpolation logic for camera here
-    this.camera.position.x += (target.x - this.camera.position.x) * this.cameraLerpAmount;
-    this.camera.position.y += (target.y - this.camera.position.y) * this.cameraLerpAmount;
-    this.camera.position.z += (this.cameraTargetPosition.z - this.camera.position.z) * this.cameraLerpAmount;
+  updateCamera(position: { x: number, z: number }): void { // Changed y to z
+    let idealOffset = this.calculatedIdealOffset(position);
+    let idealLookAt = this.calculatedIdealLookAt(position);
+
+    const t = 0.1; // Interpolation factor, adjust as needed
+
+    this.currentPosition.lerp(idealOffset, t);
+    this.currentLookAt.lerp(idealLookAt, t);
+
+    if (isFinite(this.currentPosition.x) && isFinite(this.currentPosition.z) && isFinite(this.currentPosition.z)) { // Changed y to z
+      this.cameraHolder.position.copy(this.currentPosition);
+    }
+
+    if (isFinite(this.currentLookAt.x) && isFinite(this.currentLookAt.z) && isFinite(this.currentLookAt.z)) { // Changed y to z
+      this.camera.lookAt(this.currentLookAt);
+    }
+  }
+
+  calculatedIdealOffset(position: { x: number, z: number }): THREE.Vector3 { // Changed y to z
+    // Position the camera directly above the player
+    return new THREE.Vector3(position.x, 50, position.z);  // 10 units above the player, changed y to z
+  }
+
+  calculatedIdealLookAt(position: { x: number, z: number }): THREE.Vector3 { // Changed y to z
+    // Look directly down at the player
+    return new THREE.Vector3(position.x, 0, position.z); // changed y to z
   }
 
   getCamera(): THREE.PerspectiveCamera {

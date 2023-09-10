@@ -5,9 +5,9 @@ import { Subject } from 'rxjs';
   providedIn: 'root',
 })
 export class KeyboardService {
-  private movementSubject = new Subject<{ x: number; y: number }>();
+  private movementSubject = new Subject<{ x: number; z: number }>();
   private dx = 0;
-  private dy = 0;
+  private dz = 0; // changed dy to dz
   private shouldEmit = false;
 
   constructor() {}
@@ -17,10 +17,10 @@ export class KeyboardService {
     this.shouldEmit = false; // Reset flag
 
     if (event.key === 'ArrowUp') {
-      this.dy = movementAmount;
+      this.dz = -movementAmount; // changed dy to dz
       this.shouldEmit = true;
     } else if (event.key === 'ArrowDown') {
-      this.dy = -movementAmount;
+      this.dz = movementAmount; // changed dy to dz
       this.shouldEmit = true;
     } else if (event.key === 'ArrowLeft') {
       this.dx = -movementAmount;
@@ -32,7 +32,7 @@ export class KeyboardService {
 
     if (this.shouldEmit) {
       this.emitMovement();
-      console.log('Processed Keyboard Event:', event.key, this.dx, this.dy);
+      console.log('Processed Keyboard Event:', event.key, this.dx, this.dz); // changed dy to dz
     }
   }
 
@@ -40,7 +40,7 @@ export class KeyboardService {
     this.shouldEmit = false; // Reset flag
 
     if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
-      this.dy = 0;
+      this.dz = 0; // changed dy to dz
       this.shouldEmit = true;
     } else if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
       this.dx = 0;
@@ -49,13 +49,13 @@ export class KeyboardService {
 
     if (this.shouldEmit) {
       this.emitMovement();
-      console.log('Key Released:', event.key, this.dx, this.dy);
+      console.log('Key Released:', event.key, this.dx, this.dz); // changed dy to dz
     }
   }
 
   private emitMovement(): void {
-    this.movementSubject.next({ x: this.dx, y: this.dy });
-    console.log(this.dx, this.dy);
+    this.movementSubject.next({ x: this.dx, z: this.dz }); // changed dy to dz
+    console.log(this.dx, this.dz); // changed dy to dz
   }
 
   getMovementObservable() {

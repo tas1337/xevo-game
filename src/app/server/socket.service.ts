@@ -20,27 +20,27 @@ export class SocketService {
     });
   }
 
-  public initConnectionAndSendInitialPosition(position: { x: number, y: number }): void {
-      this.emitInit(position.x, position.y);
+  public initConnectionAndSendInitialPosition(position: { x: number, z: number }): void {  // Changed y to z
+      this.emitInit(position.x, position.z);  // Changed y to z
   }
 
-  emitInit(x: number, y: number): void {
+  emitInit(x: number, z: number): void {  // Changed y to z
     this.socket.emit('init', {
       id: this.socket.id,
       x: x,
-      y: y,
+      z: z,  // Changed y to z
     });
   }
 
-  emitMove( x: number, y: number): void {
+  emitMove(position: {x: number, z: number}, rotation: { x:number, z: number }): void {  // Changed y to z
     this.socket.emit('move', {
       id: this.socket.id,
-      x: x,
-      y: y,
+      x: position.x,
+      z: position.z,  // Changed y to z
     });
   }
 
-  onUpdatePositions(callback: (playerPositions: { [id: string]: { x: number, y: number } }) => void): void {
+  onUpdatePositions(callback: (playerPositions: { [id: string]: { x: number, z: number } }) => void): void {  // Changed y to z
     this.socket.on('updatePositions', callback);
     console.log('updatePositions')
   }
