@@ -6,11 +6,11 @@ import * as THREE from 'three';
 })
 export class TestAreaService {
 
-  initLevel(scene: THREE.Scene): void {
-    this.addPlanet(scene);
+  initLevel(scene: THREE.Scene): { planet: THREE.Mesh, glowMesh: THREE.Mesh } {
+    return this.addPlanet(scene);
   }
 
-  private addPlanet(scene: THREE.Scene): void {
+  private addPlanet(scene: THREE.Scene): { planet: THREE.Mesh, glowMesh: THREE.Mesh } {
     // Create a large sphere geometry as the planet
     const planetGeometry = new THREE.SphereGeometry(25, 32, 32); 
 
@@ -65,5 +65,7 @@ export class TestAreaService {
     const glowMesh = new THREE.Mesh(planetGeometry.clone(), customMaterial);
     glowMesh.scale.multiplyScalar(1.3);
     scene.add(glowMesh);
+
+    return { planet, glowMesh };
   }
 }

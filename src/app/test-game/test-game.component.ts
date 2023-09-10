@@ -17,6 +17,10 @@ export class TestGameComponent implements OnInit {
   private players: { [id: string]: THREE.Mesh } = {};
   private devOn: boolean = true; 
 
+  private planet: THREE.Mesh | null = null;
+  private glowMesh: THREE.Mesh | null = null;
+
+
   constructor(
     private playerService: PlayerService,
     private otherPlayerService: OtherPlayersService,
@@ -44,7 +48,9 @@ private initDevelopmentFeatures(): void {
 }
 
   private initLevel(): void {
-    this.testAreaService.initLevel(this.scene);
+    const { planet, glowMesh } = this.testAreaService.initLevel(this.scene);
+    this.planet = planet;
+    this.glowMesh = glowMesh;
   }
 
   private initThree(): void {
@@ -86,14 +92,23 @@ private initDevelopmentFeatures(): void {
 
   animate = () => {
     requestAnimationFrame(this.animate.bind(this));
+    
+    // Add rotation code here for the planet and glowMesh
+    if (this.planet && this.glowMesh) {
+      this.planet.rotation.y += 0.0005;
+      this.glowMesh.rotation.y += 0.0008;
+    }
+    
+    // Existing code for updating and rendering players
     const mainPlayerMesh = this.playerService.getMesh();
     this.playerService.update(mainPlayerMesh);
+    
     Object.keys(this.players).forEach(id => {
       if (id !== this.playerService.id) {
         this.otherPlayerService.updatePosition(this.players[id], id);
       }
     });
-
+    
     this.renderer.render(this.scene, this.playerService.getCamera());
   };
 
