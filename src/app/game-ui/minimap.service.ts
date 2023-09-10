@@ -19,7 +19,7 @@ export class MinimapService {
     document.body.appendChild(this.minimapElement);
   }
 
-  updatePositions(playerPositions: { [id: string]: { x: number, y: number } }) {
+  updatePositions(playerPositions: { [id: string]: { x: number, y: number } }, myId: string) {
     // Remove old player elements
     for (const id in this.playerElements) {
       if (!playerPositions[id]) {
@@ -27,6 +27,9 @@ export class MinimapService {
         delete this.playerElements[id];
       }
     }
+
+    // The position of yourself
+    const myPosition = playerPositions[myId];
 
     // Add new player elements and update positions
     for (const id in playerPositions) {
@@ -36,14 +39,18 @@ export class MinimapService {
         element.style.width = '5px';
         element.style.height = '5px';
         element.style.position = 'absolute';
-        element.style.backgroundColor = id === 'yourSocketId' ? 'green' : 'red';  // Replace 'yourSocketId'
+        element.style.backgroundColor = id === myId ? 'green' : 'red';
         this.minimapElement.appendChild(element);
         this.playerElements[id] = element;
       }
 
       const position = playerPositions[id];
-      element.style.left = `${50 + position.x * 5}px`;
-      element.style.top = `${50 - position.y * 5}px`;
+      const relativeX = position.x - myPosition.x;  // relative to your position
+      const relativeY = position.y - myPosition.y;  // relative to your position
+
+      element.style.left = `${50 + relativeX * 5}px`;
+      element.style.top = `${50 - relativeY * 5}px`;
     }
   }
+  
 }
