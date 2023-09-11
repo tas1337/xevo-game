@@ -13,7 +13,7 @@ export class SocketService {
   }
 
   private initSocket(): void {
-    this.socket = io('http://localhost:3000/');
+    this.socket = io('/');
     this.socket.on('connect', () => {
       this.id = this.socket.id; 
       console.log('connected', this.id);
